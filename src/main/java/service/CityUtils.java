@@ -6,19 +6,24 @@ import model.City;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class CityUtils {
-    public static void readDataFromCsv (String path) throws IOException {
+    public static List<City> readDataFromCsv (String path) throws IOException {
         Scanner scanner = new Scanner(new File(path));
+        List<City> cities = new ArrayList<>();
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
-            createDataObject(line);
+            cities.add(createDataObject(line));
         }
         scanner.close();
+
+        return cities;
     }
 
-    private static void createDataObject(String line) throws JsonProcessingException {
+    private static City createDataObject(String line) throws JsonProcessingException {
         String[] fragments = line.split(";");
 
         City city = new City();
@@ -30,11 +35,13 @@ public class CityUtils {
             city.setFoundation(fragments[5]);
         }
 
-        printData(city);
+        return city;
     }
 
-    private static void printData (City city) throws JsonProcessingException {
+    public static void printData (List<City> cities) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        System.out.println("City" + mapper.writeValueAsString(city));
+        for (City city : cities) {
+            System.out.println("City" + mapper.writeValueAsString(city));
+        }
     }
 }
